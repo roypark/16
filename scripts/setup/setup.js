@@ -1,3 +1,4 @@
+import 'module-alias/register'
 import { IS_GITHUB_ACTIONS } from '@/constants'
 import { LoaderHelper } from '@/helpers/loader-helper'
 import { LogHelper } from '@/helpers/log-helper'

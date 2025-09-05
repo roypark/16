@@ -38,7 +38,7 @@
     "setup:python-bridge": "tsx scripts/setup/setup-python-dev-env.js python-bridge",
     "setup:tcp-server": "tsx scripts/setup/setup-python-dev-env.js tcp-server",
     "preinstall": "node scripts/setup/preinstall.js",
-    "postinstall": "tsx scripts/setup/setup.js",
+    "postinstall": "ts-node -r tsconfig-paths/register scripts/setup/setup.js",
     "dev:app": "vite --config app/vite.config.js",
     "dev:server": "npm run train && npm run generate:skills-endpoints && cross-env LEON_NODE_ENV=development LEON_WARM_UP_LLM_DUTIES=true tsc-watch --noClear --onSuccess \"nodemon\"",
     "dev:server:no-lint": "npm run train && npm run generate:skills-endpoints && cross-env LEON_NODE_ENV=development LEON_WARM_UP_LLM_DUTIES=true \"nodemon\"",
@@ -59,7 +59,7 @@
     "start:tcp-server": "cross-env PIPENV_PIPFILE=tcp_server/src/Pipfile LD_LIBRARY_PATH=`PIPENV_PIPFILE=tcp_server/src/Pipfile pipenv run python -c 'import os; import nvidia.cublas.lib; import nvidia.cudnn.lib; print(os.path.dirname(nvidia.cublas.lib.__file__) + \":\" + os.path.dirname(nvidia.cudnn.lib.__file__))'` pipenv run python tcp_server/src/main.py",
     "start": "cross-env LEON_NODE_ENV=production node server/dist/pre-check.js && node server/dist/index.js",
     "python-bridge": "cross-env PIPENV_PIPFILE=bridges/python/src/Pipfile pipenv run python bridges/python/src/main.py server/src/intent-object.sample.json",
-    "train": "tsx scripts/train/run-train.js",
+    "train": "ts-node -r tsconfig-paths/register scripts/train/run-train.js",
     "prepare-release": "tsx scripts/release/prepare-release.js",
     "skill-package": "tsx scripts/skill-package.js",
     "pre-release:nodejs-bridge": "tsx scripts/release/pre-release-binaries.js nodejs-bridge",
@@ -67,6 +67,10 @@
     "pre-release:tcp-server": "tsx scripts/release/pre-release-binaries.js tcp-server",
     "check": "tsx scripts/check.js",
     "kill": "pkill -f node && pkill -f leon-tcp-server && pkill -f pt_main_thread"
+  },
+  "_moduleAliases": {
+    "@@": ".",
+    "@": "server/src"
   },
   "dependencies": {
     "@aws-sdk/client-polly": "3.18.0",
@@ -141,6 +145,7 @@
     "jest-extended": "2.0.0",
     "json": "11.0.0",
     "lint-staged": "15.1.0",
+    "module-alias": "2.2.3",
     "nodemon": "3.1.4",
     "prettier": "3.1.0",
     "resolve-tspaths": "0.8.17",
@@ -148,7 +153,9 @@
     "semver": "7.5.4",
     "shx": "0.3.4",
     "tsc-watch": "6.2.0",
+    "ts-node": "10.9.2",
     "tsx": "4.10.5",
+    "tsconfig-paths": "4.2.0",
     "typescript": "5.5.4",
     "vite": "4.5.0"
   }

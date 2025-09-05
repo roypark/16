@@ -34,11 +34,6 @@ export const run: ActionFunction = async function (params) {
 
   await createTimerMemory(timerWidget.id, seconds, interval)
 
-  // TODO: return a speech without new utterance
-  /*await leon.answer({
-    widget: timerWidget,
-    speech: 'I set a timer for ... ...'
-  })*/
   await leon.answer({
     widget: timerWidget,
     key: 'timer_set'
