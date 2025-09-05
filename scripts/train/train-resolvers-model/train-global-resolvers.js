@@ -1,3 +1,4 @@
+import 'module-alias/register'
 import path from 'node:path'
 import fs from 'node:fs'
 

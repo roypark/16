@@ -53,9 +53,11 @@ export abstract class Widget<T = unknown> {
     }
     this.actionName = `${INTENT_OBJECT.domain}:${INTENT_OBJECT.skill}:${INTENT_OBJECT.action}`
     this.widget = this.constructor.name
-    this.id = `${this.widget.toLowerCase()}-${Math.random()
-      .toString(36)
-      .substring(2, 10)}`
+    this.id =
+      (options.params as { id: string }).id ||
+      `${this.widget.toLowerCase()}-${Math.random()
+        .toString(36)
+        .substring(2, 10)}`
     this.params = options.params
   }
 

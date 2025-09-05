@@ -1,55 +1,31 @@
-import { Memory } from '@sdk/memory'
+import {
+  createTimerDb,
+  getTimerMemoryByWidgetId,
+  getNewestTimerMemory,
+  TimerMemory
+} from './memory'
 
-export interface TimerMemory {
-  widgetId: string
-  duration: number
-  interval: number
-  createdAt: number
-  finishedAt: number
+export const cancelTimer = async (widgetId?: string): Promise<void> => {
+  if (!widgetId) {
+    return
+  }
 }
 
-const TIMERS_MEMORY = new Memory<TimerMemory[]>({
-  name: 'timers',
-  defaultMemory: []
-})
-
-export async function createTimerMemory(
+export const createTimerMemory = async (
   widgetId: string,
   duration: number,
   interval: number
-): Promise<TimerMemory> {
-  const createdAt = Math.floor(Date.now() / 1_000)
-  const newTimerMemory: TimerMemory = {
-    duration,
+): Promise<void> => {
+  const createdAt = Date.now()
+  const finishedAt = Math.floor(createdAt / 1_000) + duration
+
+  await createTimerDb({
     widgetId,
-    interval,
     createdAt,
-    finishedAt: createdAt + duration
-  }
-
-  const timersMemory = await TIMERS_MEMORY.read()
-  await TIMERS_MEMORY.write([...timersMemory, newTimerMemory])
-
-  return newTimerMemory
+    finishedAt,
+    duration,
+    interval
+  })
 }
 
-export async function getTimerMemoryByWidgetId(
-  widgetId: string
-): Promise<TimerMemory | null> {
-  const timersMemory = await TIMERS_MEMORY.read()
-
-  return (
-    timersMemory.find((timerMemory) => timerMemory.widgetId === widgetId) ||
-    null
-  )
-}
-
-export async function getNewestTimerMemory(): Promise<TimerMemory | null> {
-  const timersMemory = await TIMERS_MEMORY.read()
-
-  return timersMemory[timersMemory.length - 1] || null
-}
-
-export function deleteAllTimersMemory(): Promise<TimerMemory[]> {
-  return TIMERS_MEMORY.write([])
-}
+export { getTimerMemoryByWidgetId, getNewestTimerMemory, TimerMemory }
